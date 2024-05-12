@@ -81,7 +81,7 @@ All necessary information for doing this, and the next two exercises, can be fou
 You can do the diagrams with any program, but perhaps the easiest and the best way to do diagrams is the Mermaid syntax that is now implemented in GitHub Markdown pages!
 
 #### My solution:
-##  [link](./0.4: New note diagram.md) 
+[🔗](0.4: New note diagram.md) 
 the user creates a new note on the page https://studies.cs.helsinki.fi/exampleapp/notes by writing something into the text field and clicking the Save button.
 
 1. The user enters the submission content.
@@ -132,7 +132,7 @@ sequenceDiagram
 Create a diagram depicting the situation where the user goes to the single-page app version of the notes app at https://studies.cs.helsinki.fi/exampleapp/spa.
 
 #### My solution:
-##  [link](./0.5: Single page app diagram.md)  
+[🔗](0.5: Single page app diagram.md)
 user goes to the single-page app version of the notes app at https://studies.cs.helsinki.fi/exampleapp/spa.
 
 
@@ -178,7 +178,7 @@ Create a diagram depicting the situation where the user creates a new note using
 This was the last exercise, and it's time to push your answers to GitHub and mark the exercises as done in the submission system.
 
 #### My solution:
-##  [link](./0.6: New note in Single page app diagram.md) 
+[🔗](0.6: New note in Single page app diagram.md) 
 
 1. The user enters the submission content.
 2. Clicks the submit button.
