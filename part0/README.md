@@ -82,6 +82,7 @@ You can do the diagrams with any program, but perhaps the easiest and the best w
 
 #### My solution:
 [🔗](0.4: New note diagram.md) 
+
 the user creates a new note on the page https://studies.cs.helsinki.fi/exampleapp/notes by writing something into the text field and clicking the Save button.
 
 1. The user enters the submission content.
@@ -133,6 +134,7 @@ Create a diagram depicting the situation where the user goes to the single-page 
 
 #### My solution:
 [🔗](0.5: Single page app diagram.md)
+
 user goes to the single-page app version of the notes app at https://studies.cs.helsinki.fi/exampleapp/spa.
 
 
