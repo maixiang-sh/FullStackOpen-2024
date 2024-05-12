@@ -53,9 +53,17 @@ JSX 并不是 HTML，在底层，React 组件返回的 JSX 被编译成 JavaScri
 JSX 是 "XML-like",每个标签都需要关闭。
 HTML 中换行可以这样写：<br>，但是JSX中必须关闭 <br />
 
-## props: passing data to components
+## props
 在项目文件 .eslintrc.cjs 的 `rlus` 中添加 `'react/prop-types': 0` 可以消除`'***' is missing in props validation eslint(...)`的错误警告
 
+Pro-tip: you may run into issues when it comes to the structure of the props that components receive. A good way to make things more clear is by printing the props to the console, e.g. as follows:
+专业提示：当涉及到组件接收的 props 的结构时，您可能会遇到问题。让事情变得更清楚的一个好方法是将道具打印到控制台，例如如下：
+```js
+const Header = (props) => {
+  console.log(props)
+  return <h1>{props.course}</h1>
+}
+```
 
 ## ESLint
 
@@ -98,3 +106,172 @@ git add xxx
 git status
 git commit -m 'xxxx'
 git push -u origin main
+
+
+## Node.js
+Node.js 是一个基于 Google Chrome V8 JavaScript 引擎的 JavaScript 运行时环境，几乎可以在任何地方运行 - 从服务器到手机。
+
+
+## JavaScript
+### Variables 变量
+`const` const 用于声明块作用域的局部常量。
+`let` let 用于声明可重新赋值的块级作用域局部变量
+`var` var 用于声明一个函数作用域或全局作用域的变量
+
+### Arrays 数组
+```js
+const t = [1, -1, 3]
+
+t.push(5)
+
+console.log(t.length) // 4 is printed
+console.log(t[1])     // -1 is printed
+
+t.forEach(value => {
+  console.log(value)  // numbers 1, -1, 3, 5 are printed, each on its own line
+})  
+```
+
+
+使用 React 时，经常使用函数式编程技术。函数式编程范式的特征之一是使用不可变的数据结构。在 React 代码中，最好使用 concat 方法，该方法使用添加的项目创建一个新数组。这确保了原始数组保持不变。
+
+> **push()** 主要用于向原数组末尾添加新元素，并且会修改原数组。
+> **concat()** 用于合并多个数组，创建一个新数组，并且不修改原数组。
+
+```js
+const t = [1, -1, 3]
+
+const t2 = t.concat(5)  // creates new array
+
+console.log(t)  // [1, -1, 3] is printed
+console.log(t2) // [1, -1, 3, 5] is printed
+
+```
+
+**map()** 会返回一个新数组
+```js
+const t = [1, 2, 3]
+
+const m1 = t.map(value => value * 2)
+console.log(m1)   // [2, 4, 6] is printed
+
+const m2 = t.map(value => '<li>' + value + '</li>')
+console.log(m2)  
+// [ '<li>1</li>', '<li>2</li>', '<li>3</li>' ] is printed
+```
+
+**解构赋值**
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+```js
+const t = [1, 2, 3, 4, 5]
+
+const [first, second, ...rest] = t
+
+console.log(first, second)  // 1, 2 is printed
+console.log(rest)          // [3, 4, 5] is printed
+```
+
+
+## 函数
+定义函数的几种方法
+1. 箭头函数
+```js
+const sum = (p1, p2) => {
+  console.log(p1)
+  console.log(p2)
+  return p1 + p2
+}
+```
+2. 函数声明
+```js
+function product(a, b) {
+  return a * b
+}
+```
+3. 函数表达式
+```js
+const average = function(a, b) {
+  return (a + b) / 2
+}
+```
+
+
+
+## this
+this 指的是对象本身。
+```js
+const arto = {
+  name: 'Arto Hellas',
+  age: 35,
+  education: 'PhD',
+  greet: function() {
+    console.log('hello, my name is ' + this.name)
+  },
+}
+
+arto.greet()  // "hello, my name is Arto Hellas" gets printed
+```
+
+创建对象之后也可以将方法分配给对象：
+给 arto 分配了一个 growOlder 方法，对象自身 age += 1
+```js
+const arto = {
+  name: 'Arto Hellas',
+  age: 35,
+  education: 'PhD',
+  greet: function() {
+    console.log('hello, my name is ' + this.name)
+  },
+}
+
+arto.growOlder = function() {
+  this.age += 1
+}
+
+console.log(arto.age)   // 35 is printed
+arto.growOlder()
+console.log(arto.age)   // 36 is printed
+```
+
+
+当通过引用调用方法时，this 的值就变成了所谓的全局对象，最终的结果往往不是软件开发人员最初想要的。
+
+如前所述，JavaScript 中 this 的值是根据方法的调用方式定义的。当 setTimeout 调用该方法时，实际上是 JavaScript 引擎调用该方法，此时 this 引用了全局对象:
+```js
+const arto = {
+  name: 'Arto Hellas',
+  greet: function() {
+    console.log('hello, my name is ' + this.name)
+  },
+}
+
+setTimeout(arto.greet, 1000)
+```
+
+有多种机制可以保存原始的 this。其中之一是使用称为绑定的方法：
+调用 `arto.greet.bind(arto)` 创建一个新函数，其中 this 绑定指向 Arto，与调用该方法的位置和方式无关。
+```js
+setTimeout(arto.greet.bind(arto), 1000)
+```
+
+
+
+## Class
+```js
+class Person {
+  constructor(name, age) {
+    this.name = name
+    this.age = age
+  }
+  greet() {
+    console.log('hello, my name is ' + this.name)
+  }
+}
+
+const adam = new Person('Adam Ondra', 29)
+adam.greet()
+
+const janja = new Person('Janja Garnbret', 23)
+janja.greet()
+
+```
