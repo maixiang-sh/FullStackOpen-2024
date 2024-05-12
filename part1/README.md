@@ -897,7 +897,7 @@ Expand your application so that it shows more statistics about the gathered feed
 扩展您的应用程序，使其显示有关收集的反馈的更多统计信息：收集的反馈总数、平均分数（好：1、中：0、差：-1）以及积极反馈的百分比。
 
 average and percentage positive screenshot feedback
-!(img)[https://fullstackopen.com/static/0a5d15ae9f055a15cb469b9c9223df41/5a190/14e.png]
+![img](https://fullstackopen.com/static/0a5d15ae9f055a15cb469b9c9223df41/5a190/14e.png)
 
 ## 1.8: unicafe step 3
 Refactor your application so that displaying the statistics is extracted into its own Statistics component. The state of the application should remain in the App root component.
@@ -976,7 +976,7 @@ Change your application to display statistics only once feedback has been gather
 将您的应用程序更改为仅在收集反馈后才显示统计信息。
 
 no feedback given text screenshot
-!(img)[https://fullstackopen.com/static/b453d7533ae85dcaf3eccf342a353c58/5a190/15e.png]
+![img](https://fullstackopen.com/static/b453d7533ae85dcaf3eccf342a353c58/5a190/15e.png)
 ### My solution
 ```js
 import { useState } from "react";
@@ -1244,7 +1244,8 @@ Find out how to generate random numbers in JavaScript, eg. via a search engine o
 
 Your finished application could look something like this:
 您完成的应用程序可能如下所示：
-!(img)[https://fullstackopen.com/static/8577fa00fc4d946e2322de9b2707c89c/5a190/18a.png]
+
+![img](https://fullstackopen.com/static/8577fa00fc4d946e2322de9b2707c89c/5a190/18a.png)
 
 random anecdote with next button
 ### My solution
@@ -1299,7 +1300,7 @@ export default App;
 Expand your application so that you can vote for the displayed anecdote.
 扩展您的应用程序，以便您可以为所显示的轶事投票。
 
-!(img)[https://fullstackopen.com/static/06f95cb43a18bd6429174200a8d17cff/5a190/19a.png]
+![img](https://fullstackopen.com/static/06f95cb43a18bd6429174200a8d17cff/5a190/19a.png)
 
 anecdote app with votes button added
 **NB** store the votes of each anecdote into an array or object in the component's state. Remember that the correct way of updating state stored in complex data structures like objects and arrays is to make a copy of the state.
@@ -1393,7 +1394,7 @@ export default App;
 Now implement the final version of the application that displays the anecdote with the largest number of votes:
 现在实现显示投票数最多的轶事的应用程序的最终版本：
 
-!(img)[https://fullstackopen.com/static/3e8638efbbbbcabac7bb79466ab3a5f6/5a190/20a.png]
+![img](https://fullstackopen.com/static/3e8638efbbbbcabac7bb79466ab3a5f6/5a190/20a.png)
 
 anecdote with largest number of votes
 If multiple anecdotes are tied for first place it is sufficient to just show one of them.
@@ -1402,6 +1403,7 @@ If multiple anecdotes are tied for first place it is sufficient to just show one
 This was the last exercise for this part of the course and it's time to push your code to GitHub and mark all of your finished exercises to the "my submissions" tab of the submission application.
 这是本部分课程的最后一个练习，是时候将您的代码推送到 GitHub 并将所有已完成的练习标记到提交应用程序的“我的提交”选项卡中。
 
+### My solution
 ```js
 import { useState } from "react";
 
