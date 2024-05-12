@@ -7,6 +7,8 @@ Vite 支持多种模板预设，如：vanilla、react、vue等
 ```
 # 使用 react 模板创建项目 Part1（npm 7+）
 npm create vite@latest part1 -- --template react
+npm create vite@latest example -- --template react
+npm create vite@latest unicafe -- --template react
 ```
 
 ```
@@ -52,6 +54,12 @@ JSX 并不是 HTML，在底层，React 组件返回的 JSX 被编译成 JavaScri
 编译由 Babel 处理。使用 create-react-app 或 vite 创建的项目配置为自动编译。
 JSX 是 "XML-like",每个标签都需要关闭。
 HTML 中换行可以这样写：<br>，但是JSX中必须关闭 <br />
+通常在 JSX 模板中定义事件处理程序并不是一个好主意。
+```js
+<button onClick={() => setCounter(counter + 1)}> 
+  plus
+</button>
+```
 
 ## props
 在项目文件 .eslintrc.cjs 的 `rlus` 中添加 `'react/prop-types': 0` 可以消除`'***' is missing in props validation eslint(...)`的错误警告
@@ -275,3 +283,91 @@ const janja = new Person('Janja Garnbret', 23)
 janja.greet()
 
 ```
+
+
+## Component helper functions
+## 组件辅助函数
+在 JavaScript 中，在函数中定义函数是一种常用的技术。
+
+```js
+const Hello = (props) => {
+  //  bornYear 函数直接返回计算好的出生年份
+  const bornYear = () => {
+    const yearNow = new Date().getFullYear()
+    return yearNow - props.age
+  }
+
+  return (
+    <div>
+      <p>
+        Hello {props.name}, you are {props.age} years old
+      </p>
+      <p>So you were probably born in {bornYear()}</p>
+    </div>
+  )
+}
+
+```
+
+
+## useState
+React 自己的官方教程建议：“在 React 中，通常使用 onSomething 名称作为 props，这些 props 采用处理事件的函数，并使用 handleSomething 来处理处理这些事件的实际函数定义。”
+```js
+const handleSomething = () => setCounter(counter - 1)
+
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+```
+
+React 中禁止直接改变状态，因为这可能会导致意想不到的副作用。更改状态必须始终通过将状态设置为新对象来完成。如果先前状态对象的属性未更改，则只需复制它们，这是通过将这些属性复制到新对象并将其设置为新状态来完成的。
+
+Update of the state is asynchronous
+状态更新是异步的
+
+hooks 钩子只能从定义 React 组件的函数体内部调用：
+```js
+const App = () => {
+  // these are ok
+  const [age, setAge] = useState(0)
+  const [name, setName] = useState('Juha Tauriainen')
+
+  if ( age > 10 ) {
+    // this does not work!
+    const [foobar, setFoobar] = useState(null)
+  }
+
+  for ( let i = 0; i < age; i++ ) {
+    // also this is not good
+    const [rightWay, setRightWay] = useState(false)
+  }
+
+  const notGood = () => {
+    // and this is also illegal
+    const [x, setX] = useState(-1000)
+  }
+
+  return (
+    //...
+  )
+}
+```
+
+
+返回函数的函数可用于定义可以使用参数自定义的通用功能。创建事件处理程序的 hello 函数可以被视为一个工厂，它生成用于问候用户的自定义事件处理程序。
+```js
+const hello = (who) => {
+  return () => {
+    console.log('hello', who)
+  }
+}
+```
+
+
+Do Not Define Components Within Components
+不要在组件内定义组件
+最大的问题是因为 React 在每次渲染中都会将另一个组件内部定义的组件视为新组件。这使得 React 无法优化组件。
