@@ -9,6 +9,7 @@ Vite 支持多种模板预设，如：vanilla、react、vue等
 npm create vite@latest part1 -- --template react
 npm create vite@latest example -- --template react
 npm create vite@latest unicafe -- --template react
+npm create vite@latest anecdotes -- --template react
 ```
 
 ```
