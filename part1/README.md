@@ -897,6 +897,7 @@ Expand your application so that it shows more statistics about the gathered feed
 扩展您的应用程序，使其显示有关收集的反馈的更多统计信息：收集的反馈总数、平均分数（好：1、中：0、差：-1）以及积极反馈的百分比。
 
 average and percentage positive screenshot feedback
+!(img)[https://fullstackopen.com/static/0a5d15ae9f055a15cb469b9c9223df41/5a190/14e.png]
 
 ## 1.8: unicafe step 3
 Refactor your application so that displaying the statistics is extracted into its own Statistics component. The state of the application should remain in the App root component.
