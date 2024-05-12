@@ -926,6 +926,49 @@ const App = () => {
   )
 }
 ```
+### My solution
+```js
+import { useState } from "react";
+
+// a proper place to define a component
+const Statistics = ({ numOfGood, numOfNeutral, numOfBad }) => {
+  const all = numOfGood + numOfNeutral + numOfBad;
+  const average = (numOfGood - numOfBad) / all;
+  const positive = (numOfGood / all) * 100;
+
+  return (
+    <>
+      <h1>statistics</h1>
+      <p>good {numOfGood}</p>
+      <p>nenutral {numOfNeutral}</p>
+      <p>bad {numOfBad}</p>
+      <p>all {all}</p>
+      <p>average {average}</p>
+      <p>positive {positive}%</p>
+    </>
+  );
+};
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div>
+      <h1>give feed back</h1>
+      <button onClick={() => setGood(good + 1)}>good</button>
+      <button onClick={() => setNeutral(neutral + 1)}>nenutral</button>
+      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Statistics numOfGood={good} numOfNeutral={neutral} numOfBad={bad} />
+    </div>
+  );
+};
+
+export default App;
+
+```
 
 
 ## 1.9: unicafe step 4
@@ -933,6 +976,59 @@ Change your application to display statistics only once feedback has been gather
 将您的应用程序更改为仅在收集反馈后才显示统计信息。
 
 no feedback given text screenshot
+!(img)[https://fullstackopen.com/static/b453d7533ae85dcaf3eccf342a353c58/5a190/15e.png]
+### My solution
+```js
+import { useState } from "react";
+
+// a proper place to define a component
+const Statistics = ({ numOfGood, numOfNeutral, numOfBad }) => {
+  const all = numOfGood + numOfNeutral + numOfBad;
+  const average = (numOfGood - numOfBad) / all;
+  const positive = (numOfGood / all) * 100;
+
+  if (all == 0) {
+    return (
+      <>
+        <h1>statistics</h1>
+        <p>No feedback given</p>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h1>statistics</h1>
+      <p>good {numOfGood}</p>
+      <p>nenutral {numOfNeutral}</p>
+      <p>bad {numOfBad}</p>
+      <p>all {all}</p>
+      <p>average {average}</p>
+      <p>positive {positive}%</p>
+    </>
+  );
+};
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div>
+      <h1>give feed back</h1>
+      <button onClick={() => setGood(good + 1)}>good</button>
+      <button onClick={() => setNeutral(neutral + 1)}>nenutral</button>
+      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Statistics numOfGood={good} numOfNeutral={neutral} numOfBad={bad} />
+    </div>
+  );
+};
+
+export default App;
+
+```
 
 ## 1.10: unicafe step 5
 Let's continue refactoring the application. Extract the following two components:
@@ -961,6 +1057,70 @@ const Statistics = (props) => {
 The application's state should still be kept in the root App component.
 应用程序的状态仍应保留在根应用程序组件中。
 
+### My solution
+```js
+import { useState } from "react";
+
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <p>
+      {text} {value}
+    </p>
+  );
+};
+
+// a proper place to define a component
+const Statistics = ({ numOfGood, numOfNeutral, numOfBad }) => {
+  const all = numOfGood + numOfNeutral + numOfBad;
+  const average = (numOfGood - numOfBad) / all;
+  const positive = (numOfGood / all) * 100 + "%";
+
+  if (all == 0) {
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <StatisticLine text={"good"} value={numOfGood} />
+      <StatisticLine text={"nenutral"} value={numOfNeutral} />
+      <StatisticLine text={"bad"} value={numOfBad} />
+      <StatisticLine text={"all"} value={all} />
+      <StatisticLine text={"average"} value={average} />
+      <StatisticLine text={"positive"} value={positive} />
+    </>
+  );
+};
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div>
+      <h1>give feed back</h1>
+      <Button text={"good"} handleClick={() => setGood(good + 1)} />
+      <Button text={"neutral"} handleClick={() => setNeutral(neutral + 1)} />
+      <Button text={"bad"} handleClick={() => setBad(bad + 1)} />
+      <h1>statistics</h1>
+      <Statistics numOfGood={good} numOfNeutral={neutral} numOfBad={bad} />
+    </div>
+  );
+};
+
+export default App;
+
+```
+
 ## 1.11*: unicafe step 6
 Display the statistics in an HTML table, so that your application looks roughly like this:
 在 HTML 表中显示统计信息，以便您的应用程序大致如下所示：
@@ -978,6 +1138,71 @@ Typical source of an error Unchecked runtime.lastError: Could not establish conn
 
 Make sure that from now on you don't see any warnings in your console!
 确保从现在开始您在控制台中不会看到任何警告！
+
+### My solution
+```js
+import { useState } from "react";
+
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  );
+};
+
+// a proper place to define a component
+const Statistics = ({ numOfGood, numOfNeutral, numOfBad }) => {
+  const all = numOfGood + numOfNeutral + numOfBad;
+  const average = (numOfGood - numOfBad) / all;
+  const positive = (numOfGood / all) * 100 + "%";
+
+  if (all == 0) {
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    );
+  }
+
+  return (
+    <table>
+      <StatisticLine text={"good"} value={numOfGood} />
+      <StatisticLine text={"nenutral"} value={numOfNeutral} />
+      <StatisticLine text={"bad"} value={numOfBad} />
+      <StatisticLine text={"all"} value={all} />
+      <StatisticLine text={"average"} value={average} />
+      <StatisticLine text={"positive"} value={positive} />
+    </table>
+  );
+};
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div>
+      <h1>give feed back</h1>
+      <Button text={"good"} handleClick={() => setGood(good + 1)} />
+      <Button text={"neutral"} handleClick={() => setNeutral(neutral + 1)} />
+      <Button text={"bad"} handleClick={() => setBad(bad + 1)} />
+      <h1>statistics</h1>
+      <Statistics numOfGood={good} numOfNeutral={neutral} numOfBad={bad} />
+    </div>
+  );
+};
+
+export default App;
+
+```
 
 ## 1.12*: anecdotes step 1
 The world of software engineering is filled with anecdotes that distill timeless truths from our field into short one-liners.

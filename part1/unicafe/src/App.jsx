@@ -1,21 +1,41 @@
 import { useState } from "react";
 
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  );
+};
+
 // a proper place to define a component
 const Statistics = ({ numOfGood, numOfNeutral, numOfBad }) => {
   const all = numOfGood + numOfNeutral + numOfBad;
   const average = (numOfGood - numOfBad) / all;
-  const positive = (numOfGood / all) * 100;
+  const positive = (numOfGood / all) * 100 + "%";
+
+  if (all == 0) {
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    );
+  }
 
   return (
-    <>
-      <h1>statistics</h1>
-      <p>good {numOfGood}</p>
-      <p>nenutral {numOfNeutral}</p>
-      <p>bad {numOfBad}</p>
-      <p>all {all}</p>
-      <p>average {average}</p>
-      <p>positive {positive}%</p>
-    </>
+    <table>
+      <StatisticLine text={"good"} value={numOfGood} />
+      <StatisticLine text={"nenutral"} value={numOfNeutral} />
+      <StatisticLine text={"bad"} value={numOfBad} />
+      <StatisticLine text={"all"} value={all} />
+      <StatisticLine text={"average"} value={average} />
+      <StatisticLine text={"positive"} value={positive} />
+    </table>
   );
 };
 
@@ -28,9 +48,10 @@ const App = () => {
   return (
     <div>
       <h1>give feed back</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>nenutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Button text={"good"} handleClick={() => setGood(good + 1)} />
+      <Button text={"neutral"} handleClick={() => setNeutral(neutral + 1)} />
+      <Button text={"bad"} handleClick={() => setBad(bad + 1)} />
+      <h1>statistics</h1>
       <Statistics numOfGood={good} numOfNeutral={neutral} numOfBad={bad} />
     </div>
   );
