@@ -91,3 +91,10 @@ const App = () => {
 In React, the individual things rendered in braces must be primitive values, such as numbers or strings.
 在 React 中，大括号中呈现的各个事物必须是原始值，例如数字或字符串。不能是对象
 如果数组包含符合渲染条件的值（例如数字或字符串），React 还允许渲染数组。但是是一个数组拼接后的值
+
+
+## Git
+git add xxx
+git status
+git commit -m 'xxxx'
+git push -u origin main
