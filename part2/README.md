@@ -245,6 +245,7 @@ It's also important to put what we learned in the debugging React applications c
 
 After finishing this exercise your application should look something like this:
 完成本练习后，您的应用程序应如下所示：
+![img](https://fullstackopen.com/static/501199c4a6d7a5702a7bdf31998d5a1d/5a190/10e.png)
 
 screenshot of 2.6 finished
 Note the use of the React developer tools extension in the picture above!
@@ -257,12 +258,57 @@ you can use the person's name as a value of the key property
 remember to prevent the default action of submitting HTML forms!
 请记住阻止提交 HTML 表单的默认操作！
 
+### My solution
+```js
+import { useState } from "react";
+
+const App = () => {
+  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [newName, setNewName] = useState("");
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const addPerson = (event) => {
+    event.preventDefault();
+    const newPerson = {
+      name: newName,
+    };
+    setPersons(persons.concat(newPerson));
+    setNewName("");
+  };
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {persons.map((person, index) => (
+        <div key={index}>{person.name}</div>
+      ))}
+    </div>
+  );
+};
+
+export default App;
+
+```
+
 ## 2.7: The Phonebook Step 2
 Prevent the user from being able to add names that already exist in the phonebook. JavaScript arrays have numerous suitable methods for accomplishing this task. Keep in mind how object equality works in Javascript.
 阻止用户添加电话簿中已存在的姓名。 JavaScript 数组有许多合适的方法来完成此任务。请记住对象相等性在 Javascript 中的工作原理。
 
 Issue a warning with the alert command when such an action is attempted:
 当尝试执行此类操作时，发出警报 command 警告：
+![img](https://fullstackopen.com/static/d5be58590c1460090cb1c87adf201886/5a190/11e.png)
 
 browser alert: "user already exists in the phonebook"
 Hint: when you are forming strings that contain values from variables, it is recommended to use a template string:
@@ -292,11 +338,87 @@ Expand your application by allowing users to add phone numbers to the phone book
 ```
 At this point, the application could look something like this. The image also displays the application's state with the help of React developer tools:
 此时，应用程序可能看起来像这样。该图像还借助 React 开发者工具显示应用程序的状态：
+![img](https://fullstackopen.com/static/3068a34af61692773a06d60ee93638a9/5a190/12e.png)
+
+### My solution
+```js
+import { useState } from "react";
+
+const App = () => {
+  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+
+  // 更新输入框 name 文本的函数
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  // 更新输入框 number 文本的函数
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  // 检查名字是否已存在于 persons 中
+  const nameAlreadyExists = (name) => {
+    // Array.some() 用于检查数组中是否至少有一个元素符合条件
+    return persons.some((person) => person.name == name);
+  };
+
+  const addPerson = (event) => {
+    event.preventDefault();
+    // 检查名字是否已存在
+    if (nameAlreadyExists(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+    // 新建 person
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+    // 添加新 person 并更新
+    setPersons(persons.concat(newPerson));
+    // 重置输入框内容
+    setNewName("");
+    setNewNumber("");
+  };
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {persons.map((person, index) => (
+        <div key={index}>
+          {person.name} {person.number}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default App;
+
+```
 
 ## 2.8 sample screenshot
 ## 2.9*: The Phonebook Step 4
 Implement a search field that can be used to filter the list of people by name:
 实现一个可用于按姓名过滤人员列表的搜索字段：
+
+![img](https://fullstackopen.com/static/4b5897029d4c9e2eb61631ca4c1a4f24/5a190/13e.png)
+
 
 ## 2.9 search field
 You can implement the search field as an input element that is placed outside the HTML form. The filtering logic shown in the image is case insensitive, meaning that the search term arto also returns results that contain Arto with an uppercase A.
@@ -318,6 +440,106 @@ const App = () => {
 ```
 This saves you from having to manually input data into your application for testing out your new functionality.
 这使您无需手动将数据输入到应用程序中来测试新功能。
+
+
+### My solution
+```js
+import { useState } from "react";
+
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
+  ]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [query, setQuery] = useState("");
+
+  // 更新输入框 Query 文本的函数
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  // 更新输入框 name 文本的函数
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  // 更新输入框 number 文本的函数
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  // 返回 name 包含关键词的 person 数组
+  const filterPersons = (query) => {
+    const queryLower = query.toLowerCase();
+    return persons.filter((person) =>
+      person.name.toLowerCase().includes(queryLower)
+    );
+  };
+
+  // 检查名字是否已存在于 persons 中
+  const nameAlreadyExists = (name) => {
+    // Array.some() 用于检查数组中是否至少有一个元素符合条件
+    return persons.some((person) => person.name == name);
+  };
+
+  const addPerson = (event) => {
+    event.preventDefault();
+    // 检查名字是否已存在
+    if (nameAlreadyExists(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+    // 新建 person
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    };
+    // 添加新 person 并更新
+    setPersons(persons.concat(newPerson));
+    // 重置输入框内容
+    setNewName("");
+    setNewNumber("");
+  };
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <form>
+        <div>
+          filter shown with <input value={query} onChange={handleQueryChange} />
+        </div>
+      </form>
+      <h2>Add New</h2>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {filterPersons(query).map((person) => (
+        <div key={person.id}>
+          {person.name} {person.number}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default App;
+
+
+```
 
 ## 2.10: The Phonebook Step 5
 If you have implemented your application in a single component, refactor it by extracting suitable parts into new components. Maintain the application's state and all event handlers in the App root component.

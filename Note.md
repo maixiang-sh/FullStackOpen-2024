@@ -428,3 +428,14 @@ const handleNoteChange = (event) => {
 event.preventDefault() 是一个 JavaScript 中常用的方法，用于阻止事件的默认行为。在上下文中，它是用来阻止表单提交的默认行为。
 
 在表单中，当你点击提交按钮时，浏览器会尝试向服务器发送表单数据并刷新页面，这是表单的默认行为。但有时你可能希望在提交表单时执行一些其他的操作，而不是刷新页面。在这种情况下，你可以使用 event.preventDefault() 来阻止表单的默认提交行为，从而使你有机会执行自己的逻辑，比如对表单数据进行验证、处理数据等操作。
+
+
+## Array.some()
+```js
+  // 检查名字是否已存在于 persons 中
+  const nameAlreadyExists = (name) => {
+    // Array.some() 用于检查数组中是否至少有一个元素符合条件
+    return persons.some((person) => person.name == name);
+  };
+
+  ```
