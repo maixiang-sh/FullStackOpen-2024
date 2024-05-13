@@ -7,7 +7,7 @@ Part updated 14th August 2023
 Create React App replaced with Vite
 
 
-# Exercises 2.1.-2.5. 练习 2.1.-2.5。
+# Exercises 2.1.-2.5.
 The exercises are submitted via GitHub, and by marking the exercises as done in the submission system.
 练习通过 GitHub 提交，并在提交系统中将练习标记为已完成。
 
