@@ -7,7 +7,7 @@ Vite 支持多种模板预设，如：vanilla、react、vue等
 ```
 # 使用 react 模板创建项目 Part1（npm 7+）
 npm create vite@latest part1 -- --template react
-npm create vite@latest example -- --template react
+npm create vite@latest courseinfo -- --template react
 npm create vite@latest unicafe -- --template react
 npm create vite@latest anecdotes -- --template react
 ```
@@ -372,3 +372,28 @@ const hello = (who) => {
 Do Not Define Components Within Components
 不要在组件内定义组件
 最大的问题是因为 React 在每次渲染中都会将另一个组件内部定义的组件视为新组件。这使得 React 无法优化组件。
+
+
+## Map
+列表项，即由 map 方法生成的元素，每个都必须有一个唯一的键值：一个称为 key 的属性。
+React 使用数组中对象的关键属性来确定当组件重新渲染时如何更新组件生成的视图。有关此内容的更多信息，请参阅 [React 文档](https://react.dev/learn/preserving-and-resetting-state#option-2-resetting-state-with-a-key)。
+
+
+```js
+const App = (props) => {
+  const { notes } = props
+
+  return (
+    <div>
+      <h1>Notes</h1>
+      <ul>
+        {notes.map(note => 
+          <li key={note.id}>
+            {note.content}
+          </li>
+        )}
+      </ul>
+    </div>
+  )
+}
+```
