@@ -10,8 +10,7 @@ const App = () => {
     { name: "Dan Abramov", number: "12-43-234345", id: 3 },
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
-  // const [newName, setNewName] = useState("");
-  // const [newNumber, setNewNumber] = useState("");
+
   const [query, setQuery] = useState("");
 
   // 更新输入框 Query 文本的函数
@@ -19,6 +18,9 @@ const App = () => {
     setQuery(event.target.value);
   };
 
+  // // newName、newName 这两个 useState 移动至 PersonForm 组件
+  // const [newName, setNewName] = useState("");
+  // const [newNumber, setNewNumber] = useState("");
   // // 更新输入框 name 文本的函数
   // const handleNumberChange = (event) => {
   //   setNewNumber(event.target.value);
@@ -43,7 +45,7 @@ const App = () => {
     return persons.some((person) => person.name == name);
   };
 
-  const addPerson = (event, { newName, newNumber }) => {
+  const addPerson = ({ newName, newNumber }) => {
     event.preventDefault();
     // 检查名字是否已存在
     if (nameAlreadyExists(newName)) {
@@ -58,9 +60,6 @@ const App = () => {
     };
     // 添加新 person 并更新
     setPersons(persons.concat(newPerson));
-    // 重置输入框内容
-    // setNewName("");
-    // setNewNumber("");
   };
 
   return (
