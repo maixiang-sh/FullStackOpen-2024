@@ -10,6 +10,7 @@ npm create vite@latest part1 -- --template react
 npm create vite@latest courseinfo -- --template react
 npm create vite@latest unicafe -- --template react
 npm create vite@latest anecdotes -- --template react
+npm create vite@latest notes-frontend -- --template react
 ```
 
 ```
@@ -64,6 +65,10 @@ HTML 中换行可以这样写：<br>，但是JSX中必须关闭 <br />
 
 ## props
 在项目文件 .eslintrc.cjs 的 `rlus` 中添加 `'react/prop-types': 0` 可以消除`'***' is missing in props validation eslint(...)`的错误警告
+
+```
+  'react/prop-types': 0
+```
 
 Pro-tip: you may run into issues when it comes to the structure of the props that components receive. A good way to make things more clear is by printing the props to the console, e.g. as follows:
 专业提示：当涉及到组件接收的 props 的结构时，您可能会遇到问题。让事情变得更清楚的一个好方法是将道具打印到控制台，例如如下：
@@ -397,3 +402,28 @@ const App = (props) => {
   )
 }
 ```
+
+
+## 如何访问表单输入元素中包含的数据？
+### Controlled component 受控元件
+[Controlled component](https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable)
+
+每次输入元素发生更改时都会调用事件处理程序。事件处理函数接收事件对象作为其事件参数：
+```js
+<input
+  value={newNote}
+  onChange={handleNoteChange}
+/>
+// ... 
+const handleNoteChange = (event) => {
+  // console.log(event.target.value)
+  setNewNote(event.target.value)
+}
+
+```
+
+## event.preventDefault()
+
+event.preventDefault() 是一个 JavaScript 中常用的方法，用于阻止事件的默认行为。在上下文中，它是用来阻止表单提交的默认行为。
+
+在表单中，当你点击提交按钮时，浏览器会尝试向服务器发送表单数据并刷新页面，这是表单的默认行为。但有时你可能希望在提交表单时执行一些其他的操作，而不是刷新页面。在这种情况下，你可以使用 event.preventDefault() 来阻止表单的默认提交行为，从而使你有机会执行自己的逻辑，比如对表单数据进行验证、处理数据等操作。

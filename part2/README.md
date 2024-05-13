@@ -181,7 +181,175 @@ const App = () => {
 The application can, for example, look like this:
 例如，该应用程序可以如下所示：
 
+![img](https://fullstackopen.com/static/8c1ce3363ec056cd15c5edacbeec3370/5a190/10e.png)
+
 arbitrary number of courses feature add-on
 ## 2.5: Separate module step10
 Declare the Course component as a separate module, which is imported by the App component. You can include all subcomponents of the course in the same module.
 将 Course 组件声明为单独的模块，由 App 组件导入。您可以将课程的所有子组件包含在同一模块中。
+
+
+
+
+# Exercises 2.6.-2.10.
+In the first exercise, we will start working on an application that will be further developed in the later exercises. In related sets of exercises, it is sufficient to return the final version of your application. You may also make a separate commit after you have finished each part of the exercise set, but doing so is not required.
+在第一个练习中，我们将开始开发一个应用程序，该应用程序将在后面的练习中进一步开发。在相关的练习中，返回应用程序的最终版本就足够了。您也可以在完成练习集的每个部分后进行单独的提交，但这不是必需的。
+
+## 2.6: The Phonebook Step 1
+Let's create a simple phonebook. In this part, we will only be adding names to the phonebook.
+让我们创建一个简单的电话簿。在这一部分中，我们只会将姓名添加到电话簿中。
+
+Let us start by implementing the addition of a person to the phonebook.
+让我们首先实现将一个人添加到电话簿中。
+
+You can use the code below as a starting point for the App component of your application:
+您可以使用下面的代码作为应用程序的 App 组件的起点：
+```js
+import { useState } from 'react'
+
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas' }
+  ]) 
+  const [newName, setNewName] = useState('')
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <form>
+        <div>
+          name: <input />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      ...
+    </div>
+  )
+}
+
+export default App
+```
+The newName state is meant for controlling the form input element.
+newName 状态用于控制表单输入元素。
+
+Sometimes it can be useful to render state and other variables as text for debugging purposes. You can temporarily add the following element to the rendered component:
+有时，出于调试目的将状态和其他变量呈现为文本可能很有用。您可以临时将以下元素添加到渲染组件中：
+```js
+<div>debug: {newName}</div>copy
+```
+It's also important to put what we learned in the debugging React applications chapter of part one into good use. The React developer tools extension is incredibly useful for tracking changes that occur in the application's state.
+充分利用我们在第一部分的调试 React 应用程序一章中学到的知识也很重要。 React 开发人员工具扩展对于跟踪应用程序状态中发生的变化非常有用。
+
+After finishing this exercise your application should look something like this:
+完成本练习后，您的应用程序应如下所示：
+
+screenshot of 2.6 finished
+Note the use of the React developer tools extension in the picture above!
+请注意上图中 React 开发者工具扩展的使用！
+
+**NB:**
+
+you can use the person's name as a value of the key property
+您可以使用该人的姓名作为键属性的值
+remember to prevent the default action of submitting HTML forms!
+请记住阻止提交 HTML 表单的默认操作！
+
+## 2.7: The Phonebook Step 2
+Prevent the user from being able to add names that already exist in the phonebook. JavaScript arrays have numerous suitable methods for accomplishing this task. Keep in mind how object equality works in Javascript.
+阻止用户添加电话簿中已存在的姓名。 JavaScript 数组有许多合适的方法来完成此任务。请记住对象相等性在 Javascript 中的工作原理。
+
+Issue a warning with the alert command when such an action is attempted:
+当尝试执行此类操作时，发出警报 command 警告：
+
+browser alert: "user already exists in the phonebook"
+Hint: when you are forming strings that contain values from variables, it is recommended to use a template string:
+提示：当您形成包含变量值的字符串时，建议使用模板字符串：
+
+`${newName} is already added to phonebook`
+If the newName variable holds the value Arto Hellas, the template string expression returns the string
+如果 newName 变量保存值 Arto Hellas，则模板字符串表达式返回该字符串
+
+`Arto Hellas is already added to phonebook`
+The same could be done in a more Java-like fashion by using the plus operator:
+通过使用加号运算符，可以以更类似于 Java 的方式完成相同的操作：
+
+newName + ' is already added to phonebook'copy
+Using template strings is the more idiomatic option and the sign of a true JavaScript professional.
+使用模板字符串是更惯用的选择，也是真正的 JavaScript 专业人士的标志。
+
+## 2.8: The Phonebook Step 3
+Expand your application by allowing users to add phone numbers to the phone book. You will need to add a second input element to the form (along with its own event handler):
+通过允许用户将电话号码添加到电话簿来扩展您的应用程序。您需要向表单添加第二个输入元素（及其自己的事件处理程序）：
+```js
+<form>
+  <div>name: <input /></div>
+  <div>number: <input /></div>
+  <div><button type="submit">add</button></div>
+</form>
+```
+At this point, the application could look something like this. The image also displays the application's state with the help of React developer tools:
+此时，应用程序可能看起来像这样。该图像还借助 React 开发者工具显示应用程序的状态：
+
+## 2.8 sample screenshot
+## 2.9*: The Phonebook Step 4
+Implement a search field that can be used to filter the list of people by name:
+实现一个可用于按姓名过滤人员列表的搜索字段：
+
+## 2.9 search field
+You can implement the search field as an input element that is placed outside the HTML form. The filtering logic shown in the image is case insensitive, meaning that the search term arto also returns results that contain Arto with an uppercase A.
+您可以将搜索字段实现为放置在 HTML 表单外部的输入元素。图像中显示的过滤逻辑不区分大小写，这意味着搜索词 arto 也会返回包含带有大写 A 的 Arto 的结果。
+
+**NB:** When you are working on new functionality, it's often useful to "hardcode" some dummy data into your application, e.g.
+注意：当您开发新功能时，将一些虚拟数据“硬编码”到您的应用程序中通常很有用，例如
+```js
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ])
+
+  // ...
+}
+```
+This saves you from having to manually input data into your application for testing out your new functionality.
+这使您无需手动将数据输入到应用程序中来测试新功能。
+
+## 2.10: The Phonebook Step 5
+If you have implemented your application in a single component, refactor it by extracting suitable parts into new components. Maintain the application's state and all event handlers in the App root component.
+如果您在单个组件中实现了应用程序，请通过将合适的部分提取到新组件中来重构它。维护应用程序的状态和应用程序根组件中的所有事件处理程序。
+
+It is sufficient to extract three components from the application. Good candidates for separate components are, for example, the search filter, the form for adding new people to the phonebook, a component that renders all people from the phonebook, and a component that renders a single person's details.
+从应用程序中提取三个组件就足够了。例如，单独组件的良好候选者包括搜索过滤器、用于将新人员添加到电话簿的表单、呈现电话簿中所有人员的组件以及呈现单个人的详细信息的组件。
+
+The application's root component could look similar to this after the refactoring. The refactored root component below only renders titles and lets the extracted components take care of the rest.
+重构后，应用程序的根组件可能与此类似。下面重构的根组件仅呈现标题，并让提取的组件处理其余部分。
+```js
+const App = () => {
+  // ...
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+
+      <Filter ... />
+
+      <h3>Add a new</h3>
+
+      <PersonForm 
+        ...
+      />
+
+      <h3>Numbers</h3>
+
+      <Persons ... />
+    </div>
+  )
+}
+```
+**NB:** You might run into problems in this exercise if you define your components "in the wrong place". Now would be a good time to rehearse the chapter do not define a component in another component from the last part.
+注意：如果您“在错误的位置”定义组​​件，则在此练习中您可能会遇到问题。现在是排练本章的好时机，不要在上一部分的另一个组件中定义组件。
