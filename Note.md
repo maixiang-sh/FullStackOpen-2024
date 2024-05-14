@@ -439,3 +439,128 @@ event.preventDefault() 是一个 JavaScript 中常用的方法，用于阻止事
   };
 
   ```
+
+
+## Getting data from server 从服务器获取数据
+
+### [JSON Server](https://github.com/typicode/json-server)
+  使用 JSON Server 充当服务器
+
+### XMLHttpRequest
+XMLHttpRequest 获取数据，也称为使用 XHR 对象发出的 HTTP 请求。这是 1999 年引入的技术，现在每个浏览器都支持该技术很长一段时间了。
+不再推荐使用 XHR，浏览器已经广泛支持 fetch 方法，该方法基于所谓的 Promise，而不是 XHR 使用的事件驱动模型。
+目前，JavaScript 引擎是单线程的，这意味着它们无法并行执行代码。因此，实践中需要使用非阻塞模型来执行IO操作。否则，浏览器将在例如从服务器获取数据的过程中“冻结”。
+JavaScript 引擎的单线程特性的另一个后果是，如果某些代码执行占用大量时间，浏览器将在执行期间卡住。
+
+In today's browsers, it is possible to run parallelized code with the help of so-called web workers. The event loop of an individual browser window is, however, still only handled by a single thread.
+在当今的浏览器中，可以在所谓的 [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) 的帮助下运行并行代码。然而，单个浏览器窗口的事件循环仍然仅由单个线程处理。
+
+## npm
+我们可以使用前面提到的基于 Promise 的函数 fetch 从服务器提取数据。 Fetch 是一个很棒的工具。它已标准化并受到所有现代浏览器（IE 除外）的支持。
+
+如今，几乎所有 JavaScript 项目都是使用 Node 包管理器（又名 npm）定义的。使用Vite创建的项目也遵循npm格式。项目使用 npm 的一个明显标志是位于项目根目录的 package.json 文件：
+
+**注意** npm-commands 应始终在项目根目录中运行，这是可以找到 package.json 文件的位置。
+
+通过执行 command 将 json-server 安装为开发依赖项（仅在开发期间使用）：
+```
+npm install json-server --save-dev
+```
+
+在启动新的 json-server 之前，必须先终止之前启动的 json-server；否则就会出现麻烦：
+
+
+## Promise
+Promise 是一个代表异步操作的对象。一个 Promise 可以具有三种不同的状态：
+1. pending，这意味着最终值（以下两个之一）尚不可用。
+2. fulfilled，表示操作已经完成，并且可以得到最终的值，一般是操作成功。
+3. rejected，这意味着错误阻止了最终值的确定，这通常代表操作失败。
+
+如果并且当我们想要访问由 Promise 表示的操作的结果时，我们必须向 Promise 注册一个事件处理程序。这是使用以下方法实现的：
+```js
+const promise = axios.get('http://localhost:3000/notes')
+
+promise.then(response => {
+  console.log(response)
+})
+
+```
+JavaScript 运行时环境调用 then 方法注册的回调函数，并为其提供响应对象作为参数。响应对象包含与 HTTP GET 请求响应相关的所有基本数据，其中包括返回的数据、状态代码和标头。
+
+通常不需要将 Promise 对象存储在变量中，而是通常将 then 方法调用链接到 axios 方法调用，以便它直接跟随它：
+```js
+axios.get('http://localhost:3000/notes').then(response => {
+  const notes = response.data
+  console.log(notes)
+})
+```
+
+格式化链式方法调用的一种更易读的方法是将每个调用放在自己的行上：
+```js
+axios
+  .get('http://localhost:3001/notes')
+  .then(response => {
+    const notes = response.data
+    console.log(notes)
+  })
+```
+
+
+## Effect-hooks
+Effects let a component connect to and synchronize with external systems. This includes dealing with network, browser DOM, animations, widgets written using a different UI library, and other non-React code.
+Effects 允许组件连接到外部系统并与其同步。这包括处理网络、浏览器 DOM、动画、使用不同 UI 库编写的小部件以及其他非 React 代码。
+
+因此，效果钩子正是从服务器获取数据时使用的正确工具。
+默认情况下，Effect 会在每次完成渲染后运行，但您可以选择仅在某些值发生更改时才触发它。
+useEffect 的第二个参数用于指定特效的运行频率。如果第二个参数是一个空数组[]，那么只有在第一次渲染组件时才会运行 Effect 。
+
+```js
+useEffect(setup, dependencies?)
+```
+**参数**
+- setup：处理 Effect 的函数。setup 函数选择性返回一个 清理（cleanup） 函数。当组件被添加到 DOM 的时候，React 将运行 setup 函数。在每次依赖项变更重新渲染后，React 将首先使用旧值运行 cleanup 函数（如果你提供了该函数），然后使用新值运行 setup 函数。在组件从 DOM 中移除后，React 将最后一次运行 cleanup 函数。
+
+- 可选 dependencies：setup 代码中引用的所有响应式值的列表。响应式值包括 props、state 以及所有直接在组件内部声明的变量和函数。如果你的代码检查工具 配置了 React，那么它将验证是否每个响应式值都被正确地指定为一个依赖项。依赖项列表的元素数量必须是固定的，并且必须像 [dep1, dep2, dep3] 这样内联编写。React 将使用 Object.is 来比较每个依赖项和它先前的值。如果省略此参数，则在每次重新渲染组件之后，将重新运行 Effect 函数。如果你想了解更多，请参见 传递依赖数组、空数组和不传递依赖项之间的区别。
+
+**返回值**
+`useEffect` 返回 `undefined`。
+
+
+在 React 的 useEffect 钩子中，第二个参数是一个依赖项数组，它的作用非常关键。这个数组可以告诉 React useEffect 内的函数什么时候需要重新执行。具体来说，这个机制如下：
+
+1. 无依赖项（不传递第二个参数）：
+- 当你不传递第二个参数时，useEffect 中的函数会在组件的每次渲染后都执行。这类似于 componentDidMount 和 componentDidUpdate 的组合。
+  
+
+1. 空数组（[]）作为依赖项：
+- 当依赖项数组为空时，useEffect 中的函数仅在组件挂载时执行一次，之后不再执行。这类似于类组件中的 componentDidMount 生命周期方法，适用于只需要运行一次的效果（如 API 调用、订阅等）。
+
+3. 具有依赖项的数组：
+- 当依赖项数组中包含一个或多个变量时，useEffect 中的函数将在组件挂载后以及这些依赖项发生变化时执行。这相当于类组件中的 componentDidUpdate，但它只在指定的依赖变化时运行，而不是所有的更新。这使得你可以精确控制 useEffect 的执行时机。
+  
+依赖项数组的正确使用非常重要，它可以帮助避免不必要的副作用执行，提升组件的性能。不正确的依赖项可能导致 bug，例如忽略更新依赖项可能导致使用了过时的状态或属性值。
+
+下面是一个使用 useEffect 的示例：
+```js
+import React, { useState, useEffect } from 'react';
+
+function ExampleComponent() {
+    const [count, setCount] = useState(0);
+
+    // 仅在count变化时执行
+    useEffect(() => {
+        document.title = `You clicked ${count} times`;
+    }, [count]); // 依赖数组中包含count
+
+    return (
+        <div>
+            <p>You clicked {count} times</p>
+            <button onClick={() => setCount(count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+```
+在这个例子中，useEffect 函数依赖于 count 变量。只有 count 改变时，useEffect 才会重新执行，这样可以确保文档标题的更新仅在 count 变化时发生。

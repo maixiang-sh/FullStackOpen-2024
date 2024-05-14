@@ -575,3 +575,55 @@ const App = () => {
 ```
 **NB:** You might run into problems in this exercise if you define your components "in the wrong place". Now would be a good time to rehearse the chapter do not define a component in another component from the last part.
 注意：如果您“在错误的位置”定义组​​件，则在此练习中您可能会遇到问题。现在是排练本章的好时机，不要在上一部分的另一个组件中定义组件。
+
+
+
+# Exercise 2.11.
+## 2.11: The Phonebook Step 6
+We continue with developing the phonebook. Store the initial state of the application in the file db.json, which should be placed in the root of the project.
+我们继续开发电话簿。将应用程序的初始状态存储在文件 db.json 中，该文件应放置在项目的根目录中。
+```js
+{
+  "persons":[
+    { 
+      "name": "Arto Hellas", 
+      "number": "040-123456",
+      "id": 1
+    },
+    { 
+      "name": "Ada Lovelace", 
+      "number": "39-44-5323523",
+      "id": 2
+    },
+    { 
+      "name": "Dan Abramov", 
+      "number": "12-43-234345",
+      "id": 3
+    },
+    { 
+      "name": "Mary Poppendieck", 
+      "number": "39-23-6423122",
+      "id": 4
+    }
+  ]
+}
+```
+Start json-server on port 3001 and make sure that the server returns the list of people by going to the address http://localhost:3001/persons in the browser.
+在端口 3001 上启动 json-server 并确保服务器通过在浏览器中访问地址 http://localhost:3001/persons 返回人员列表。
+
+If you receive the following error message:
+如果您收到以下错误消息：
+```
+events.js:182
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE 0.0.0.0:3001
+    at Object._errnoException (util.js:1019:11)
+    at _exceptionWithHostPort (util.js:1041:20)
+```
+it means that port 3001 is already in use by another application, e.g. in use by an already running json-server. Close the other application, or change the port in case that doesn't work.
+这意味着端口 3001 已被另一个应用程序使用，例如已被正在运行的 json 服务器使用。关闭其他应用程序，或更改端口，以防不起作用。
+
+Modify the application such that the initial state of the data is fetched from the server using the axios-library. Complete the fetching with an Effect hook.
+修改应用程序，以便使用 axios-library 从服务器获取数据的初始状态。使用 Effect 钩子完成抓取。
