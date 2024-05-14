@@ -564,3 +564,15 @@ function ExampleComponent() {
 
 ```
 在这个例子中，useEffect 函数依赖于 count 变量。只有 count 改变时，useEffect 才会重新执行，这样可以确保文档标题的更新仅在 count 变化时发生。
+
+
+
+## REST
+在 REST 术语中，我们将单个数据对象（例如应用程序中的 Notes ）称为资源。每个资源都有一个与其关联的唯一地址 - 它的 URL。根据 json-server 使用的一般约定，我们可以在资源 URL Notes/3 处找到单个注释，其中 3 是资源的 id。另一方面，注释 URL 将指向包含所有注释的资源集合。
+
+
+
+## 将与后端的通信提取到单独的模块中
+Extracting Communication with the Backend into a Separate Module
+
+## promise chain

@@ -1,21 +1,25 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import PersonServices from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    PersonServices.getAll().then((initialPersons) => {
       console.log("promise fulfilled");
-      setPersons(response.data);
+      setPersons(initialPersons);
     });
   }, []);
 
-  // 更新输入框 Query 文本的函数
+  /**
+   * 更新筛选框的 handle 方法
+   *
+   * @param {Event} query - 事件
+   */
   const handleQueryChange = (event) => {
     setQuery(event.target.value);
   };
@@ -32,7 +36,12 @@ const App = () => {
   //   setNewName(event.target.value);
   // };
 
-  // 返回 name 包含关键词的 person 数组
+  /**
+   * 返回 姓名 包含关键词的 persons 数组
+   *
+   * @param {string} query - 搜索关键词
+   * @returns { Array<Object> } persons - 返回包含该关键词的 Person 数组
+   */
   const filterPersons = (query) => {
     const queryLower = query.toLowerCase();
     return persons.filter((person) =>
@@ -40,27 +49,96 @@ const App = () => {
     );
   };
 
-  // 检查名字是否已存在于 persons 中
+  /**
+   * 检查 姓名 是否已存在于电话簿中
+   *
+   * @param {string} name - 姓名
+   * @returns { boolean} 该姓名是否已存在与电话簿中
+   */
   const nameAlreadyExists = (name) => {
     // Array.some() 用于检查数组中是否至少有一个元素符合条件
     return persons.some((person) => person.name == name);
   };
 
+  /**
+   * 根据给定的 name 查找 person 的 id
+   * @param {string} name
+   * @returns {string} id
+   */
+  const getPersonIdByName = (name) => {
+    const person = persons.find((person) => person.name === name);
+    const id = person.id;
+    return id;
+  };
+
+  /**
+   * 向 电话簿中 添加 联系方式
+   *
+   * @param {string} newName - 姓名
+   * @param {string} newNumber - 电话
+   *
+   */
   const addPerson = ({ newName, newNumber }) => {
-    event.preventDefault();
     // 检查名字是否已存在
     if (nameAlreadyExists(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const message = `${newName} is already added to phonebook, replace the old number with a new one?`;
+      if (confirm(message)) {
+        const personId = getPersonIdByName(newName);
+        updatePerson(personId, newNumber);
+        console.log(`Updated: ${newName} ${newNumber}`);
+      }
+      console.log(`Cancel update: ${newName} ${newNumber}`);
       return;
     }
     // 新建 person
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
     // 添加新 person 并更新
-    setPersons(persons.concat(newPerson));
+    PersonServices.create(newPerson).then((returnPerson) => {
+      setPersons(persons.concat(returnPerson));
+      console.log(`Add: ${newName} ${newNumber}`);
+    });
+  };
+
+  /**
+   * 从 电话簿中 删除 指定 id 的联系方式
+   *
+   * @param {string} id - 人物 id
+   */
+  const removePerson = (id) => {
+    const name = persons.find((person) => person.id == id).name;
+    if (confirm(`Delete ${name}`)) {
+      PersonServices.remove(id)
+        .then((returnPerson) => {
+          setPersons(persons.filter((person) => person.id !== returnPerson.id));
+          console.log(
+            `Removed ${(returnPerson.id, returnPerson.name, returnPerson.name)}`
+          );
+        })
+        .catch((error) => {
+          alert(`${name} does not exist`);
+          console.log(error);
+        });
+    }
+  };
+  /**
+   * 更新已有人物的电话号码
+   * @param {string} id - 人物id
+   * @param {string} newNumber - 新电话号码
+   */
+  const updatePerson = (id, newNumber) => {
+    const oldPerosn = persons.find((p) => p.id === id);
+    // 创建 person 的副本， 修改 number
+    const changedPerson = { ...oldPerosn, number: newNumber };
+    PersonServices.update(id, changedPerson).then((returnPerson) => {
+      setPersons(
+        persons.map((person) =>
+          person.id === returnPerson.id ? changedPerson : person
+        )
+      );
+    });
   };
 
   return (
@@ -70,7 +148,7 @@ const App = () => {
       <h2>Add New</h2>
       <PersonForm onSubmit={addPerson} />
       <h2>Numbers</h2>
-      <Persons persons={filterPersons(query)} />
+      <Persons persons={filterPersons(query)} onClick={removePerson} />
     </div>
   );
 };

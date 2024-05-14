@@ -50,6 +50,7 @@ const App = () => {
       })
       .catch((error) => {
         alert(`the note '${note.content}' was already deleted from server`);
+        console.log(error)
         setNotes(notes.filter((n) => n.id !== id));
       });
   };

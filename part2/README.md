@@ -627,3 +627,134 @@ it means that port 3001 is already in use by another application, e.g. in use by
 
 Modify the application such that the initial state of the data is fetched from the server using the axios-library. Complete the fetching with an Effect hook.
 修改应用程序，以便使用 axios-library 从服务器获取数据的初始状态。使用 Effect 钩子完成抓取。
+
+### My solution
+```js
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
+
+const App = () => {
+  const [persons, setPersons] = useState([]);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log("promise fulfilled");
+      setPersons(response.data);
+    });
+  }, []);
+
+  // 更新输入框 Query 文本的函数
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  // // newName、newName 这两个 useState 移动至 PersonForm 组件
+  // const [newName, setNewName] = useState("");
+  // const [newNumber, setNewNumber] = useState("");
+  // // 更新输入框 name 文本的函数
+  // const handleNumberChange = (event) => {
+  //   setNewNumber(event.target.value);
+  // };
+  // // 更新输入框 number 文本的函数
+  // const handleNameChange = (event) => {
+  //   setNewName(event.target.value);
+  // };
+
+  // 返回 name 包含关键词的 person 数组
+  const filterPersons = (query) => {
+    const queryLower = query.toLowerCase();
+    return persons.filter((person) =>
+      person.name.toLowerCase().includes(queryLower)
+    );
+  };
+
+  // 检查名字是否已存在于 persons 中
+  const nameAlreadyExists = (name) => {
+    // Array.some() 用于检查数组中是否至少有一个元素符合条件
+    return persons.some((person) => person.name == name);
+  };
+
+  const addPerson = ({ newName, newNumber }) => {
+    event.preventDefault();
+    // 检查名字是否已存在
+    if (nameAlreadyExists(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+    // 新建 person
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    };
+    // 添加新 person 并更新
+    setPersons(persons.concat(newPerson));
+  };
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <Filter query={query} handleQueryChange={handleQueryChange} />
+      <h2>Add New</h2>
+      <PersonForm onSubmit={addPerson} />
+      <h2>Numbers</h2>
+      <Persons persons={filterPersons(query)} />
+    </div>
+  );
+};
+
+export default App;
+
+```
+
+# Exercises 2.12.-2.15.
+## 2.12: The Phonebook step 7
+
+Let's return to our phonebook application.
+让我们回到我们的电话簿应用程序。
+
+Currently, the numbers that are added to the phonebook are not saved to a backend server. Fix this situation.
+目前，添加到电话簿的号码不会保存到后端服务器。解决这个问题。
+
+## 2.13: The Phonebook step 8
+Extract the code that handles the communication with the backend into its own module by following the example shown earlier in this part of the course material.
+按照本部分课程材料前面所示的示例，将处理与后端通信的代码提取到其自己的模块中。
+
+## 2.14: The Phonebook step 9
+Make it possible for users to delete entries from the phonebook. The deletion can be done through a dedicated button for each person in the phonebook list. You can confirm the action from the user by using the window.confirm method:
+使用户可以从电话簿中删除条目。可以通过电话簿列表中每个人的专用按钮来完成删除。您可以使用 window.confirm 方法确认用户的操作：
+![img](https://fullstackopen.com/static/591ebc9e0e2dc651c0d2877efd763a59/5a190/24e.png)
+
+## 2.17 window confirm feature screeshot
+The associated resource for a person in the backend can be deleted by making an HTTP DELETE request to the resource's URL. If we are deleting e.g. a person who has the id 2, we would have to make an HTTP DELETE request to the URL localhost:3001/persons/2. No data is sent with the request.
+可以通过向资源的 URL 发出 HTTP DELETE 请求来删除后端人员的关联资源。如果我们要删除例如id 为 2 的人，我们必须向 URL localhost:3001/persons/2 发出 HTTP DELETE 请求。请求中不发送任何数据。
+
+You can make an HTTP DELETE request with the axios library in the same way that we make all of the other requests.
+您可以使用 axios 库发出 HTTP DELETE 请求，就像我们发出所有其他请求一样。
+
+NB: You can't use the name delete for a variable because it's a reserved word in JavaScript. E.g. the following is not possible:
+注意：您不能对变量使用名称“delete”，因为它是 JavaScript 中的保留字。例如。以下情况是不可能的：
+```
+// use some other name for variable!
+const delete = (id) => {
+  // ...
+}
+
+```
+
+## 2.15*: The Phonebook step 10
+Why is there a star in the exercise? See here for the explanation.
+为什么练习中有一颗星星？请参阅此处的解释。
+
+Change the functionality so that if a number is added to an already existing user, the new number will replace the old number. It's recommended to use the HTTP PUT method for updating the phone number.
+更改功能，以便如果将号码添加到现有用户，新号码将取代旧号码。建议使用 HTTP PUT 方法来更新电话号码。
+
+If the person's information is already in the phonebook, the application can ask the user to confirm the action:
+如果该人的信息已在电话簿中，则应用程序可以要求用户确认操作：
+## 2.18 screenshot alert confirmation
+
+![img](https://fullstackopen.com/static/7353398520426bd823cf92202767653f/5a190/16e.png)
