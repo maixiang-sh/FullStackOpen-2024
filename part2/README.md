@@ -783,3 +783,72 @@ Fix the issue according to the example shown in promise and errors in part 2. Mo
 error message shown on screen instead of in console feature add-on
 Note that even if you handle the exception, the first "404" error message is still printed to the console. But you should not see "Uncaught (in promise) Error".
 请注意，即使您处理了异常，第一个“404”错误消息仍然会打印到控制台。但您不应该看到“未捕获（承诺）错误”。
+
+
+
+## 2.18* Data for countries, step 1
+At https://studies.cs.helsinki.fi/restcountries/ you can find a service that offers a lot of information related to different countries in a so-called machine-readable format via the REST API. Make an application that allows you to view information from different countries.
+在 https://studies.cs.helsinki.fi/restcountries/ 上，您可以找到一项服务，该服务通过 REST API 以所谓的机器可读格式提供与不同国家/地区相关的大量信息。制作一个应用程序，允许您查看来自不同国家的信息。
+
+The user interface is very simple. The country to be shown is found by typing a search query into the search field.
+用户界面非常简单。通过在搜索字段中输入搜索查询可以找到要显示的国家/地区。
+
+If there are too many (over 10) countries that match the query, then the user is prompted to make their query more specific:
+如果与查询匹配的国家/地区太多（超过 10 个），系统会提示用户使查询更加具体：
+![img](https://fullstackopen.com/static/d8a3e3b3af8907d0c3dd495ef0d26ba6/5a190/19b1.png)
+
+too many matches screenshot
+If there are ten or fewer countries, but more than one, then all countries matching the query are shown:
+如果国家/地区数量不超过 10 个但超过 1 个，则显示与查询匹配的所有国家/地区：
+![img](https://fullstackopen.com/static/1d4ebf199806ccfe0df529c08e2a0c6d/5a190/19b2.png)
+
+matching countries in a list screenshot
+When there is only one country matching the query, then the basic data of the country (eg. capital and area), its flag and the languages spoken are shown:
+当只有一个国家匹配查询时，则显示该国家的基本数据（例如首都和面积）、国旗和使用的语言：
+![img](https://fullstackopen.com/static/1da341d99aa963449991676f4f6c34b3/5a190/19c3.png)
+
+flag and additional attributes screenshot
+NB: It is enough that your application works for most countries. Some countries, like Sudan, can be hard to support since the name of the country is part of the name of another country, South Sudan. You don't need to worry about these edge cases.
+注意：您的应用程序适用于大多数国家就足够了。有些国家，如苏丹，可能很难支持，因为该国的名称是另一个国家南苏丹名称的一部分。您无需担心这些边缘情况。
+
+## 2.19*: Data for countries, step 2
+There is still a lot to do in this part, so don't get stuck on this exercise!
+这部分还有很多工作要做，所以不要卡在这个练习上！
+
+Improve on the application in the previous exercise, such that when the names of multiple countries are shown on the page there is a button next to the name of the country, which when pressed shows the view for that country:
+改进上一个练习中的应用程序，以便当页面上显示多个国家/地区的名称时，该国家/地区名称旁边有一个按钮，按下该按钮会显示该国家/地区的视图：
+
+attach show buttons for each country feature
+In this exercise, it is also enough that your application works for most countries. Countries whose name appears in the name of another country, like Sudan, can be ignored.
+在此练习中，您的应用程序适用于大多数国家/地区就足够了。名称中出现另一个国家名称的国家（例如苏丹）可以忽略。
+
+## 2.20*: Data for countries, step 3
+Add to the view showing the data of a single country, the weather report for the capital of that country. There are dozens of providers for weather data. One suggested API is https://openweathermap.org. Note that it might take some minutes until a generated API key is valid.
+添加到显示单个国家/地区数据的视图中，添加该国家/地区首都的天气预报。有数十家天气数据提供商。一种建议的 API 是 https://openweathermap.org。请注意，生成的 API 密钥可能需要几分钟才能生效。
+
+weather report added feature
+If you use Open weather map, here is the description for how to get weather icons.
+如果您使用开放天气地图，这里是如何获取天气图标的说明。
+
+NB: In some browsers (such as Firefox) the chosen API might send an error response, which indicates that HTTPS encryption is not supported, although the request URL starts with http://. This issue can be fixed by completing the exercise using Chrome.
+注意：在某些浏览器（例如 Firefox）中，所选 API 可能会发送错误响应，这表明不支持 HTTPS 加密，尽管请求 URL 以 http:// 开头。可以通过使用 Chrome 完成练习来解决此问题。
+
+NB: You need an api-key to use almost every weather service. Do not save the api-key to source control! Nor hardcode the api-key to your source code. Instead use an environment variable to save the key.
+注意：您需要一个 api 密钥才能使用几乎所有天气服务。不要将 api-key 保存到源代码管理中！也不会将 api-key 硬编码到源代码中。而是使用环境变量来保存密钥。
+
+Assuming the api-key is 54l41n3n4v41m34rv0, when the application is started like so:
+假设 api-key 是 54l41n3n4v41m34rv0，当应用程序启动时，如下所示：
+
+export VITE_SOME_KEY=54l41n3n4v41m34rv0 && npm run dev // For Linux/macOS Bash
+($env:VITE_SOME_KEY="54l41n3n4v41m34rv0") -and (npm run dev) // For Windows PowerShell
+set "VITE_SOME_KEY=54l41n3n4v41m34rv0" && npm run dev // For Windows cmd.execopy
+you can access the value of the key from the import.meta.env object:
+您可以从 import.meta.env 对象访问键的值：
+
+const api_key = import.meta.env.VITE_SOME_KEY
+// variable api_key now has the value set in startupcopy
+Note that you will need to restart the server to apply the changes.
+请注意，您需要重新启动服务器才能应用更改。
+
+This was the last exercise of this part of the course. It's time to push your code to GitHub and mark all of your finished exercises to the exercise submission system.
+这是这部分课程的最后一个练习。是时候将您的代码推送到 GitHub 并将所有已完成的练习标记到练习提交系统了。

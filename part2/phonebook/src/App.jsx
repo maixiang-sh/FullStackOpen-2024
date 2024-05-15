@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
-// 组件
+// components 组件
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Notification from "./components/Notification";
-// api 客户端
+// api client api 客户端
 import PersonServices from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [query, setQuery] = useState("");
+  // Used to <Notification />
   const [notification, setNotification] = useState({});
 
   useEffect(() => {
@@ -27,18 +28,6 @@ const App = () => {
   const handleQueryChange = (event) => {
     setQuery(event.target.value);
   };
-
-  // // newName、newName 这两个 useState 移动至 PersonForm 组件
-  // const [newName, setNewName] = useState("");
-  // const [newNumber, setNewNumber] = useState("");
-  // // 更新输入框 name 文本的函数
-  // const handleNumberChange = (event) => {
-  //   setNewNumber(event.target.value);
-  // };
-  // // 更新输入框 number 文本的函数
-  // const handleNameChange = (event) => {
-  //   setNewName(event.target.value);
-  // };
 
   /**
    * 返回 姓名 包含关键词的 persons 数组
