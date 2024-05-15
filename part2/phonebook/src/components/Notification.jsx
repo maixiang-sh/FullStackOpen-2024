@@ -28,7 +28,7 @@ const Notification = ({ message, color, duration }) => {
     // to avoid leaving pending operations that may cause memory leaks
     // after the component is unloaded.
     return () => {
-      setIsVisible(true);
+      setIsVisible(true); // Here must reset isVisible to true for it to work，I don't know why?
       clearTimeout(timer);
     };
   }, [message, duration]); // dependency. When values change, Effect will be executed again.
