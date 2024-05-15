@@ -758,3 +758,28 @@ If the person's information is already in the phonebook, the application can ask
 ## 2.18 screenshot alert confirmation
 
 ![img](https://fullstackopen.com/static/7353398520426bd823cf92202767653f/5a190/16e.png)
+
+
+
+# Exercises 2.16.-2.17.
+
+## 2.16: Phonebook step 11
+Use the improved error message example from part 2 as a guide to show a notification that lasts for a few seconds after a successful operation is executed (a person is added or a number is changed):
+使用第 2 部分中改进的错误消息示例作为指南，显示在成功执行操作（添加人员或更改号码）后持续几秒钟的通知：
+![img](https://fullstackopen.com/static/da9af454f06489ca6e7453150beda738/5a190/27e.png)
+
+successful green added screenshot
+## 2.17*: Phonebook step 12
+Open your application in two browsers. If you delete a person in browser 1 a short while before attempting to change the person's phone number in browser 2, you will get the following error messages:
+在两个浏览器中打开您的应用程序。如果您在浏览器 1 中删除某个人，然后尝试在浏览器 2 中更改此人的电话号码，您将收到以下错误消息：
+![img](https://fullstackopen.com/static/be832524a82a387fb3adddda37eaa149/5a190/29b.png)
+
+error message 404 not found when changing multiple browsers
+Fix the issue according to the example shown in promise and errors in part 2. Modify the example so that the user is shown a message when the operation does not succeed. The messages shown for successful and unsuccessful events should look different:
+根据第2部分中的promise和errors所示的示例修复问题。修改示例，以便在操作不成功时向用户显示消息。成功和不成功事件显示的消息应该看起来不同：
+
+![img](https://fullstackopen.com/static/dfc66f03514b3f013cf19ba1339ba34f/5a190/28e.png)
+
+error message shown on screen instead of in console feature add-on
+Note that even if you handle the exception, the first "404" error message is still printed to the console. But you should not see "Uncaught (in promise) Error".
+请注意，即使您处理了异常，第一个“404”错误消息仍然会打印到控制台。但您不应该看到“未捕获（承诺）错误”。

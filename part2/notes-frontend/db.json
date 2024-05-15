@@ -18,11 +18,11 @@
     {
       "id": "c507",
       "content": "useEffect(setup, dependencies?) 第二个参数的作用是什么",
-      "important": true
+      "important": false
     },
     {
-      "id": "c6e0",
-      "content": "在命令前添加 sudo，这将以超级用户的权限执行安装命令。这是最简单的解决方案，但要小心使用，因为 sudo 可以让命令具有更高的权限。",
+      "id": "c5027",
+      "content": "useEffect(setup, dependencies?) 第二个参数的作用是什么",
       "important": true
     }
   ]

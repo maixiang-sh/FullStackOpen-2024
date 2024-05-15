@@ -576,3 +576,32 @@ function ExampleComponent() {
 Extracting Communication with the Backend into a Separate Module
 
 ## promise chain
+
+
+## 内联样式
+如下：`footerStyle`
+
+Inline styles come with certain limitations. For instance, so-called pseudo-classes can't be used straightforwardly.
+内联样式有一定的限制。例如，所谓的伪类不能直接使用。
+
+```js
+const Footer = () => {
+  const footerStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Note app, Department of Computer Science, University of Helsinki 2024</em>
+    </div>
+  )
+}
+```
+
+内联样式和其他一些向 React 组件添加样式的方法完全违背了旧约定的原则。传统上，将 CSS 与内容 (HTML) 和功能 (JavaScript) 完全分离被认为是最佳实践。根据这种较旧的思想流派，目标是将 CSS、HTML 和 JavaScript 写入各自的文件中。
+
+事实上，React 的哲学与此截然相反。由于将 CSS、HTML 和 JavaScript 分离到单独的文件中似乎在大型应用程序中无法很好地扩展，因此 React 根据应用程序的逻辑功能实体来划分应用程序。
+
+构成应用程序功能实体的结构单元是 React 组件。 React 组件定义了用于构建内容的 HTML、用于确定功能的 JavaScript 函数以及组件的样式；全部集中在一处。这是为了创建尽可能独立且可重用的单独组件。

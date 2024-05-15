@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
+// 导入组件
 import Note from "./components/Note";
+import Notification from "./components/Notification";
+import Footer from "./components/Footer";
+// 导入 api 类
 import noteService from "./services/notes";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("some error happened...");
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
+      const nonExistentData = {
+        id: "999",
+        content: "nonExistentData",
+        important: true,
+      };
+      setNotes(initialNotes.concat(nonExistentData));
     });
   }, []);
 
@@ -37,6 +47,7 @@ const App = () => {
   // 切换 note 的重要性
   const toggleImportanceOf = (id) => {
     console.log(`importance of ${id} needs to be toggled`);
+    // 寻找对应 id 的 note
     const note = notes.find((n) => n.id === id);
     // 创建 note 的副本， 并将其中的 important 属性取反
     const changedNote = { ...note, important: !note.important };
@@ -49,8 +60,15 @@ const App = () => {
         setNotes(notes.map((n) => (n.id !== id ? n : returnedNote)));
       })
       .catch((error) => {
-        alert(`the note '${note.content}' was already deleted from server`);
-        console.log(error)
+        // 更新出现错误时，设置 errorMessage 值，当 errorMessage 值更新后且不为空，会重新绘制 Notification 组件，出现错误提示内容
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        );
+        // 5 秒后 将错误信息设置为空
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+        console.log(error);
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
@@ -63,6 +81,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "important" : "all"}
@@ -81,6 +100,7 @@ const App = () => {
         <input value={newNote} onChange={handleNoteChange} />
         <button type="submit">save</button>
       </form>
+      <Footer />
     </div>
   );
 };
