@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+// 组件
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
+// api 客户端
 import PersonServices from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [query, setQuery] = useState("");
+  const [notification, setNotification] = useState({});
 
   useEffect(() => {
     PersonServices.getAll().then((initialPersons) => {
@@ -98,7 +102,13 @@ const App = () => {
     // 添加新 person 并更新
     PersonServices.create(newPerson).then((returnPerson) => {
       setPersons(persons.concat(returnPerson));
-      console.log(`Add: ${newName} ${newNumber}`);
+      // 设置提示信息
+      setNotification({
+        message: `Added: ${newName} ${newNumber}`,
+        color: "green",
+        duration: 5,
+      });
+      console.log(`Added: ${newName} ${newNumber}`);
     });
   };
 
@@ -113,12 +123,22 @@ const App = () => {
       PersonServices.remove(id)
         .then((returnPerson) => {
           setPersons(persons.filter((person) => person.id !== returnPerson.id));
+          // 设置提示信息
+          setNotification({
+            message: "ihihihi",
+            color: "red",
+            duration: 5,
+          });
           console.log(
             `Removed ${(returnPerson.id, returnPerson.name, returnPerson.name)}`
           );
         })
         .catch((error) => {
-          alert(`${name} does not exist`);
+          setNotification({
+            message: `Information of ${name} has already been removed from server`,
+            color: "red",
+            duration: 5,
+          });
           console.log(error);
         });
     }
@@ -138,12 +158,23 @@ const App = () => {
           person.id === returnPerson.id ? changedPerson : person
         )
       );
+      // 设置提示信息
+      setNotification({
+        message: `Updated ${newNumber}`,
+        color: "yellow",
+        duration: 5,
+      });
     });
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification
+        message={notification.message}
+        color={notification.color}
+        duration={notification.duration}
+      />
       <Filter query={query} handleQueryChange={handleQueryChange} />
       <h2>Add New</h2>
       <PersonForm onSubmit={addPerson} />

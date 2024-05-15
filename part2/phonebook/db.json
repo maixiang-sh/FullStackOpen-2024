@@ -3,7 +3,7 @@
     {
       "id": "1",
       "name": "Patricia Jones",
-      "number": "+1-478-873-4885"
+      "number": "+1-478-873-4881"
     },
     {
       "id": "2",
@@ -39,11 +39,6 @@
       "id": "8",
       "name": "Patricia Miller",
       "number": "+1-952-241-6205"
-    },
-    {
-      "id": "f7a3",
-      "name": "22",
-      "number": "333"
     }
   ]
 }
