@@ -2,16 +2,10 @@ import axios from "axios";
 
 // 创建 axios 实例，并配置基础 URL 和 API 密钥
 // 将 api 保存在环境变量中，读取环境变量
-const API_KEY = import.meta.env.OPENWEATHER_API_KEY;
+const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
 
-const client = axios.create({
-  baseURL: BASE_URL,
-  params: {
-    appid: API_KEY,
-    units: "metric", // 使用公制单位，影响返回数据的单位
-  },
-});
+const client = axios.create({ baseURL: BASE_URL });
 
 /**
  * 从 OpenWeatherMap API 获取当前天气数据。
@@ -22,7 +16,14 @@ const client = axios.create({
  * @returns {Promise<Object>} 返回一个 promise 对象，解析后包含当前天气数据。
  */
 const getCurrentWeather = ({ lat, lon }) => {
-  const request = client.get("/weather", { params: { lat, lon } });
+  const request = client.get("/weather", {
+    params: {
+      appid: API_KEY,
+      units: "metric", // 使用公制单位，影响返回数据的单位
+      lat: lat,
+      lon: lon,
+    },
+  });
   return request.then((response) => response.data);
 };
 

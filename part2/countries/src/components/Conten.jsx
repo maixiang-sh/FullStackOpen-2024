@@ -4,6 +4,8 @@ import CountryInfo from "./CountryInfo";
 const Content = ({ countries }) => {
   const countryCount = countries.length;
 
+  if (countryCount === 0) return null;
+
   if (countryCount > 10) {
     return <div>Too many matches, specify another filter</div>;
   }

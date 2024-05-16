@@ -4,7 +4,7 @@ const CountryInfo = ({ country }) => {
   console.log(country.languages);
   return (
     <div>
-      <h2>{country.name.common}</h2>
+      <h1>{country.name.common}</h1>
 
       <div>{`capital: ${country.capital}`}</div>
       <div>{`area: ${country.area}`}</div>

@@ -12,6 +12,8 @@ npm create vite@latest unicafe -- --template react
 npm create vite@latest anecdotes -- --template react
 npm create vite@latest notes-frontend -- --template react
 npm create vite@latest phonebook -- --template react
+npm create vite@latest countries -- --template react
+
 ```
 
 ```

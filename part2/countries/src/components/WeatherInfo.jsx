@@ -19,19 +19,21 @@ const WeatherInfo = ({ commonName, lat, lon }) => {
     return () => setMessage("");
   }, [lat, lon]);
 
-  if (!message.trim()) return <div>{message}</div>;
+  if (message.trim()) return <div>{message}</div>;
 
-  return (
-    <div>
-      <h2>{`Weather in ${commonName}`}</h2>
-      <p>{`temperature ${WeatherServices.getTemp(weather)} Celcius`}</p>
-      <img
-        src={WeatherServices.getWeatherIconURLFromData(weather)}
-        alt={WeatherServices.getWeatherDescription(weather)}
-      />
-      <p>{`wind ${WeatherServices.getWindSpeed(weather)} m/s`}</p>
-    </div>
-  );
+  if (weather !== null) {
+    return (
+      <div>
+        <h2>{`Weather in ${commonName}`}</h2>
+        <p>{`temperature ${WeatherServices.getTemp(weather)} Celcius`}</p>
+        <img
+          src={WeatherServices.getWeatherIconURLFromData(weather)}
+          alt={WeatherServices.getWeatherDescription(weather)}
+        />
+        <p>{`wind ${WeatherServices.getWindSpeed(weather)} m/s`}</p>
+      </div>
+    );
+  }
 };
 
 export default WeatherInfo;
