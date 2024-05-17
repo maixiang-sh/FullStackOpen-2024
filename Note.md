@@ -574,6 +574,9 @@ function ExampleComponent() {
 
 
 
+
+
+
 ## 将与后端的通信提取到单独的模块中
 Extracting Communication with the Backend into a Separate Module
 
@@ -607,3 +610,101 @@ const Footer = () => {
 事实上，React 的哲学与此截然相反。由于将 CSS、HTML 和 JavaScript 分离到单独的文件中似乎在大型应用程序中无法很好地扩展，因此 React 根据应用程序的逻辑功能实体来划分应用程序。
 
 构成应用程序功能实体的结构单元是 React 组件。 React 组件定义了用于构建内容的 HTML、用于确定功能的 JavaScript 函数以及组件的样式；全部集中在一处。这是为了创建尽可能独立且可重用的单独组件。
+
+
+
+
+# Back-End
+
+
+### 使用 Node 的内置 http Web 服务器来实现服务器代码
+```js
+// 导入模块
+const http = require("http");
+
+let notes = [
+  {
+    id: 1,
+    content: "HTML is easy",
+    important: true,
+  },
+  {
+    id: 2,
+    content: "Browser can execute only JavaScript",
+    important: false,
+  },
+  {
+    id: 3,
+    content: "GET and POST are the most important methods of HTTP protocol",
+    important: true,
+  },
+];
+
+// 使用 http.createServer 方法创建了一个新的 HTTP 服务器。
+// 这个方法接收一个回调函数作为参数，该回调函数会在服务器接收到每一个 HTTP 请求时被调用。
+// 回调函数有两个参数：request 和 response。
+// - request：表示一个 HTTP 请求的对象，包含了请求的 URL、headers、方法（如 GET、POST）等信息。
+// - response：用来构建并发送 HTTP 响应的对象
+const app = http.createServer((request, response) => {
+  // 使用 response.writeHead 方法设置 HTTP 响应的状态码和头部。
+  response.writeHead(200, { "Content-Type": "text/plain" });
+  // response.end 方法用于结束响应，并可以选择发送一些内容。
+  response.end(JSON.stringify(notes));
+});
+
+// 服务器就会监听 3000 端口，并在控制台输出一条消息，说明服务器正在运行。
+// 可以通过访问 http://localhost:3000 在浏览器中看到响应。
+const PORT = 3001;
+app.listen(PORT);
+console.log(`Server running on port ${PORT}`);
+
+
+```
+
+
+### 使用 Express 库 简化 Node 的服务器端开发
+```js
+
+```
+
+### node-repl
+node-repl 是指 Node.js 的读取-求值-打印循环（REPL, Read-Eval-Print Loop）环境。这是一个交互式的环境，允许用户输入 JavaScript 代码并立即执行，然后显示执行结果。这个环境对于快速测试 JavaScript 代码片段、学习 Node.js 或进行调试非常有用。以下是一些 node-repl 的主要用途：
+
+	1.	实时代码执行：在 REPL 环境中，你可以直接输入 JavaScript 代码，并看到代码执行的结果，这有助于快速理解新的编程概念或 API。
+	2.	调试：可以逐行执行代码以帮助找出逻辑错误或其他问题。
+	3.	学习和实验：对于初学者，REPL 是一个学习 JavaScript 和 Node.js API 的低门槛方式，可以即时看到代码的效果，增加互动性和学习的趣味性。
+	4.	数据处理：可以快速处理一些数据和执行简单的脚本，如数组和对象的操作等。
+	5.	开发辅助工具：开发者可以使用 REPL 环境来测试代码库或函数的功能，检查它们的行为和返回结果。
+
+要进入 Node.js 的 REPL 环境，只需在命令行或终端中输入 node 命令，不带任何参数，然后你就可以开始输入和执行 JavaScript 代码了。
+
+
+### nodemon 节点监控器
+nodemon 是一个实用的 Node.js 工具，用于在开发过程中监控任何文件变动，并自动重启你的 Node 应用。这对于开发服务器端应用来说特别有用，因为它省去了手动停止和重启服务器的繁琐步骤，从而提高开发效率。
+
+1. 作为开发依赖项安装
+```
+npm install --save-dev nodemon
+```
+2. 启动
+```
+node_modules/.bin/nodemon index.js
+```
+
+**Note:**
+在 package.json 文件中为它定义一个专用的 npm 脚本，简化启动命令
+`npm run dev`
+```json
+{
+  // ..
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  // ..
+}
+```
+
+### VSCode 插件：REST Client
+postman
