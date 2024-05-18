@@ -8,6 +8,9 @@ const morgan = require("morgan");
 // 创建 Express 应用实例
 const app = express();
 
+//每当 Express 收到 HTTP GET 请求时，它都会首先检查 dist 目录是否包含与请求地址对应的文件。
+// 如果找到正确的文件，Express 将返回该文件。
+app.use(express.static('dist'))
 // 使用 cors 中间件允许来自所有来源的请求
 app.use(cors());
 // 解析请求体中的 json
