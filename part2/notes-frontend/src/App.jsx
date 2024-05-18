@@ -14,12 +14,7 @@ const App = () => {
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
-      const nonExistentData = {
-        id: "999",
-        content: "nonExistentData",
-        important: true,
-      };
-      setNotes(initialNotes.concat(nonExistentData));
+      setNotes(initialNotes);
     });
   }, []);
 
@@ -56,7 +51,6 @@ const App = () => {
     noteService
       .update(id, changedNote)
       .then((returnedNote) => {
-        // 必须要通过
         setNotes(notes.map((n) => (n.id !== id ? n : returnedNote)));
       })
       .catch((error) => {
