@@ -708,3 +708,79 @@ node_modules/.bin/nodemon index.js
 
 ### VSCode 插件：REST Client
 postman
+
+
+### 同源策略
+
+同源策略（Same-Origin Policy, SOP）是Web浏览器的一种重要的安全机制，用于防止不同源的资源之间的不安全交互。这一策略的基本原则是：一个页面只能与同源的其他页面进行交互。
+
+### 什么是同源？
+
+同源是指两个 URL 拥有相同的协议（scheme）、主机名（hostname）和端口号（port）。具体来说，只有当两个 URL 的协议、主机名和端口号都相同时，它们才被认为是同源的。
+
+例如：
+
+- `http://example.com/page1` 和 `http://example.com/page2` 是同源的。
+- `http://example.com` 和 `https://example.com` 不是同源的（协议不同）。
+- `http://example.com` 和 `http://sub.example.com` 不是同源的（主机名不同）。
+- `http://example.com:80` 和 `http://example.com:8080` 不是同源的（端口不同）。
+
+### 同源策略的作用
+
+同源策略主要用于保护用户数据，防止恶意网站从其他网站读取敏感信息或进行未授权的操作。具体来说，同源策略限制了以下内容的访问：
+
+1. **Cookie、LocalStorage 和 SessionStorage**：不同源的站点无法读取彼此的存储内容。
+2. **DOM 访问**：不同源的站点无法访问彼此的 DOM。
+3. **AJAX 请求**：不同源的站点无法直接向彼此发起 AJAX 请求并读取响应内容。
+
+### 解决跨域问题的方法
+
+虽然同源策略在安全性方面非常重要，但在实际开发中，跨域请求（CORS）也非常常见。为了解决跨域问题，通常可以使用以下几种方法：
+
+1. **JSONP（JSON with Padding）**：
+   - 仅支持 GET 请求。
+   - 通过动态创建 `<script>` 标签来实现跨域请求。
+   - 已过时且不推荐使用，因为它存在安全问题。
+
+2. **CORS（跨域资源共享，Cross-Origin Resource Sharing）**：
+   - 服务器通过设置 HTTP 头来允许跨域请求。
+   - 可以细粒度地控制哪些域可以访问哪些资源，以及允许哪些 HTTP 方法。
+   - 更加安全和灵活，是解决跨域问题的标准方法。
+
+### CORS 的实现
+
+CORS 是通过服务器在响应头中设置一些特定的 HTTP 头来实现的。以下是一些常见的 CORS 响应头：
+
+- `Access-Control-Allow-Origin`：指定哪些域可以访问资源。
+- `Access-Control-Allow-Methods`：指定允许的 HTTP 方法。
+- `Access-Control-Allow-Headers`：指定允许的 HTTP 头。
+- `Access-Control-Allow-Credentials`：指定是否允许发送 Cookie。
+
+以下是一个使用 Express.js 设置 CORS 的示例：
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+
+// 使用 CORS 中间件，允许所有域访问
+app.use(cors());
+
+// 只允许特定域访问
+// app.use(cors({ origin: 'http://example.com' }));
+
+app.get('/data', (req, res) => {
+  res.json({ message: 'This is a CORS-enabled response.' });
+});
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+```
+
+### 同源策略的重要性
+
+同源策略在 Web 安全中扮演着重要角色，它有效地阻止了潜在的跨站脚本（XSS）攻击和跨站请求伪造（CSRF）攻击。开发者在构建 Web 应用时需要充分理解并遵守同源策略，只有在明确安全需求的前提下，才应通过适当的方式（如 CORS）来处理跨域请求。
+

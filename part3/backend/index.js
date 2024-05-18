@@ -1,9 +1,22 @@
 // 导入 Express 框架
 const express = require("express");
+// 中间件，解决同源策略问题
+const cors = require("cors");
+// 中间件，记录请求日志
+const morgan = require("morgan");
+
 // 创建 Express 应用实例
 const app = express();
 
+// 使用 cors 中间件允许来自所有来源的请求
+app.use(cors());
+// 解析请求体中的 json
 app.use(express.json());
+// 记录请求日志
+morgan.token("body", (req) => JSON.stringify(req.body));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 let notes = [
   {
@@ -91,7 +104,7 @@ app.post("/api/notes", (request, response) => {
 });
 
 // 定义服务器监听的端口号
-const PORT = 3001;
+const PORT = process.env.PORT || 3001
 // 启动服务器，并在成功监听指定端口后在控制台输出信息
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
