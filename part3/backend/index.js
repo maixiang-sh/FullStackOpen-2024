@@ -11,36 +11,18 @@ const Note = require("./models/note");
 // 创建 Express 应用实例
 const app = express();
 
+// 解析请求体中的 json
+app.use(express.json());
 //每当 Express 收到 HTTP GET 请求时，它都会首先检查 dist 目录是否包含与请求地址对应的文件。
 // 如果找到正确的文件，Express 将返回该文件。
 app.use(express.static("dist"));
 // 使用 cors 中间件允许来自所有来源的请求
 app.use(cors());
-// 解析请求体中的 json
-app.use(express.json());
 // 记录请求日志
 morgan.token("body", (req) => JSON.stringify(req.body));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
-
-// let notes = [
-//   {
-//     id: 1,
-//     content: "HTML is easy",
-//     important: true,
-//   },
-//   {
-//     id: 2,
-//     content: "Browser can execute only JavaScript",
-//     important: false,
-//   },
-//   {
-//     id: 3,
-//     content: "GET and POST are the most important methods of HTTP protocol",
-//     important: true,
-//   },
-// ];
 
 // 处理根 URL 的 GET 请求，返回一个简单的 HTML 格式的响应
 app.get("/", (request, response) => {
@@ -56,35 +38,49 @@ app.get("/api/notes", (request, response) => {
 
 // 冒号语法来定义 Express 中的路由参数，:id 即代表任何字符串。
 // id 的值可以通过 request.params.id 获取
-app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-  // 如果找到了 note，则返回 note，否则响应状态 404。 不带参数的 end() 表示不发送任何数据
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).end();
-  }
+app.get("/api/notes/:id", (request, response, next) => {
+  Note.findById(request.params.id)
+    .then((note) => {
+      if (note) {
+        response.json(note);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 // 删除资源的路由
-app.delete("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
-  // 状态码 204 表示 “No Content”，即 “无内容”。
-  // 这是一个 HTTP 响应状态码，用于指示服务器成功处理了请求，但不返回任何内容。
-  // 在以下场景中通常会使用状态码 204：
-  // 1. 更新操作 2. 删除操作 3. 提交表单或发送数据
-  response.status(204).end();
+app.delete("/api/notes/:id", (request, response, next) => {
+  Note.findByIdAndDelete(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
-// 定义一个函数用于生成新笔记的唯一 ID
-const generateId = () => {
-  // 如果笔记数组不为空，则找到当前最大的 ID 值，否则设为 0
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  // 返回最大 ID 加一，确保 ID 唯一性
-  return maxId + 1;
-};
+// // 定义一个函数用于生成新笔记的唯一 ID
+// const generateId = () => {
+//   // 如果笔记数组不为空，则找到当前最大的 ID 值，否则设为 0
+//   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+//   // 返回最大 ID 加一，确保 ID 唯一性
+//   return maxId + 1;
+// };
+
+app.put("/api/notes/:id", (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
+});
 
 // 处理 POST 请求，向服务器添加新的笔记
 app.post("/api/notes", (request, response) => {
@@ -110,6 +106,22 @@ app.post("/api/notes", (request, response) => {
   // 将新添加的笔记作为响应返回
   response.json(note);
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler);
 
 // 定义服务器监听的端口号
 const PORT = process.env.PORT;
