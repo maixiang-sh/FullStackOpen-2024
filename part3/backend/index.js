@@ -1,16 +1,19 @@
+require("dotenv").config();
 // 导入 Express 框架
 const express = require("express");
 // 中间件，解决同源策略问题
 const cors = require("cors");
 // 中间件，记录请求日志
 const morgan = require("morgan");
+// 导入 mongoose.model
+const Note = require("./models/note");
 
 // 创建 Express 应用实例
 const app = express();
 
 //每当 Express 收到 HTTP GET 请求时，它都会首先检查 dist 目录是否包含与请求地址对应的文件。
 // 如果找到正确的文件，Express 将返回该文件。
-app.use(express.static('dist'))
+app.use(express.static("dist"));
 // 使用 cors 中间件允许来自所有来源的请求
 app.use(cors());
 // 解析请求体中的 json
@@ -21,23 +24,23 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
+// let notes = [
+//   {
+//     id: 1,
+//     content: "HTML is easy",
+//     important: true,
+//   },
+//   {
+//     id: 2,
+//     content: "Browser can execute only JavaScript",
+//     important: false,
+//   },
+//   {
+//     id: 3,
+//     content: "GET and POST are the most important methods of HTTP protocol",
+//     important: true,
+//   },
+// ];
 
 // 处理根 URL 的 GET 请求，返回一个简单的 HTML 格式的响应
 app.get("/", (request, response) => {
@@ -46,7 +49,9 @@ app.get("/", (request, response) => {
 
 // 处理 GET 请求至 "/api/notes"，返回 'notes' 数组的 JSON 表示形式
 app.get("/api/notes", (request, response) => {
-  response.json(notes); // 将 'notes' 数组以 JSON 格式发送给客户端
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 // 冒号语法来定义 Express 中的路由参数，:id 即代表任何字符串。
@@ -107,7 +112,7 @@ app.post("/api/notes", (request, response) => {
 });
 
 // 定义服务器监听的端口号
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT;
 // 启动服务器，并在成功监听指定端口后在控制台输出信息
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
