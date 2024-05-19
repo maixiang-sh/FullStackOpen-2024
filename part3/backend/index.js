@@ -68,14 +68,13 @@ app.delete("/api/notes/:id", (request, response, next) => {
 // };
 
 app.put("/api/notes/:id", (request, response, next) => {
-  const body = request.body;
+  const { content, important } = request.body;
 
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedNote) => {
       response.json(updatedNote);
     })
@@ -83,28 +82,20 @@ app.put("/api/notes/:id", (request, response, next) => {
 });
 
 // 处理 POST 请求，向服务器添加新的笔记
-app.post("/api/notes", (request, response) => {
-  const body = request.body; // 获取请求的主体内容
+app.post("/api/notes", (request, response, next) => {
+  const body = request.body;
 
-  // 检查请求的内容中是否包含 'content' 字段，如果没有则返回 400 状态码和错误信息
-  if (!body.content) {
-    return response.status(400).json({
-      error: "content missing",
-    });
-  }
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+  });
 
-  // 创建一个新笔记对象，包含内容、重要性标志和一个新的唯一 ID
-  const note = {
-    content: body.content, // 笔记内容
-    important: Boolean(body.important) || false, // 将 'important' 字段转换为布尔值，如果不存在则默认为 false
-    id: generateId(), // 调用 generateId 函数生成新的 ID
-  };
-
-  // 将新创建的笔记添加到笔记数组
-  notes = notes.concat(note);
-
-  // 将新添加的笔记作为响应返回
-  response.json(note);
+  note
+    .save()
+    .then((savedNote) => {
+      response.json(savedNote);
+    })
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
@@ -117,6 +108,8 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
