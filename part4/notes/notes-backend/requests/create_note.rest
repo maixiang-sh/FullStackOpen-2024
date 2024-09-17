@@ -3,5 +3,6 @@ Content-Type: application/json
 
 {
   "content": "rest client is a handy tool",
-  "important": false
+  "important": false,
+  "userId": "66e87f7629efa961c3b6f78c"
 }

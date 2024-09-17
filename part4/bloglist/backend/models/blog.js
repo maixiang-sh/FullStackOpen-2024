@@ -8,6 +8,11 @@ const blogSchema = new mongoose.Schema({
     type: Number,
     default: 0, // 默认为 0
   },
+  user: {
+    // 引用 User
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 blogSchema.set("toJSON", {

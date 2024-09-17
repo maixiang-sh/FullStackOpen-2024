@@ -1,6 +1,7 @@
 const { test, after, beforeEach, describe } = require("node:test");
 const assert = require("node:assert");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
@@ -8,10 +9,6 @@ const api = supertest(app);
 const helper = require("./test_helper");
 
 describe("when there is initially some blogs saved", () => {
-  beforeEach(async () => {
-    await Blog.deleteMany({});
-    await Blog.insertMany(helper.initialBlogs);
-  });
   beforeEach(async () => {
     await Blog.deleteMany({});
 
@@ -56,8 +53,19 @@ describe("when there is initially some blogs saved", () => {
         likes: 0,
       };
 
+      const account = {
+        username: "diu diu blog",
+        passwordHash: "diudiu.com",
+      };
+      const user = await api
+        .post("/api/login")
+        .send(account)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+
       await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/);
@@ -132,6 +140,78 @@ describe("when there is initially some blogs saved", () => {
       const updatedBlog = new_response.body[0];
 
       assert.strictEqual(updatedBlog.likes, helper.initialBlogs[0].likes + 1);
+    });
+  });
+
+  // 4.16 测试新建账户
+  describe("add new account", () => {
+    beforeEach(async () => {
+      await User.deleteMany({});
+
+      for (let user of helper.initialUsers) {
+        let userObject = new User(user);
+        await userObject.save();
+      }
+    });
+
+    test("successfully created a new account", async () => {
+      const usersAtStart = await helper.usersInDb();
+
+      const newUser = {
+        username: "newUser",
+        name: "new_user",
+        password: "new12345",
+      };
+
+      await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      const usersAtEnd = await helper.usersInDb();
+
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
+
+      const usernames = usersAtEnd.map((u) => u.username);
+      assert(usernames.includes(newUser.username));
+    });
+
+    test("user already exists", async () => {
+      const usersAtStart = await helper.usersInDb();
+
+      const newUser = {
+        username: usersAtStart[0].username,
+        name: "xiaoxiao2",
+        password: "xiao1213124",
+      };
+
+      const response = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+      const usersAtEnd = await helper.usersInDb();
+      assert.deepStrictEqual(usersAtStart, usersAtEnd);
+    });
+
+    test("username and password do not meet requirements", async () => {
+      const newUser = {
+        username: "a",
+        name: "b",
+        password: "c",
+      };
+
+      const response = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+      assert(
+        response.body.error.includes("must be at least 3 characters long")
+      );
     });
   });
 });
